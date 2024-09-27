@@ -51,15 +51,15 @@ ul {
 
   li {
     border: 1px solid black;
-    width: 150px;
-    height: 75px;
+    width: 125px;
+    height: 77px;
   }
 }
 
 #kennel {
   display: grid;
-  grid-template-columns: 1fr 2fr 1fr;
-  width: 860px;
+  grid-template-columns: 1fr 2.3fr 1fr;
+  width: 725px;
 
   #left {
     display: flex;
