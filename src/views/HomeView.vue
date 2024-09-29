@@ -43,12 +43,12 @@
         </li>      </ul>
     </div>
 
-    <form v-if="showForm">
-      <button @click.prevent="showForm = !showForm" id="close-form">X</button>
+    <form v-if="showForm" @submit.prevent="save">
+      <button type="button" @click.prevent="showForm = !showForm" id="close-form">X</button>
       <h2>Edit Kennel {{ kennelToEdit.number }}</h2>
       <div id="name-container">
-        <input type="text" placeholder="Name" v-model="newName">
-        <button @click.prevent="clear" id="clear-button">clear</button>
+        <input ref="nameInput" type="text" placeholder="Name" v-model="newName">
+        <button type="button" @click.prevent="clear" id="clear-button">clear</button>
       </div>
 
       <button type="submit" @click.prevent="save" id="save">Save</button>
@@ -72,6 +72,8 @@ const kennel = ref([])
 const kennelToEdit = ref({})
 const newName = ref('')
 
+const nameInput = ref(null)
+
 const fetchData = async () => {
   let kennelData = await dataService.getKennel()
 
@@ -84,6 +86,7 @@ const edit = (k) => {
   showForm.value = true
   kennelToEdit.value = k
   newName.value = k.name
+  nameInput.value.focus()
 }
 
 const save = async () => {
@@ -102,6 +105,8 @@ const clear = () => {
 
 // @created
 fetchData();
+
+
 
 </script>
 
