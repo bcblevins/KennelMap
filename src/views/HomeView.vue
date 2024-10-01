@@ -2,7 +2,7 @@
   <div id="kennel">
     <div id="left">
       <ul>
-        <li v-for="k in activeKennel.slice(0, 12) " :key="k.number" @click="edit(k)" @drop="drop($event, k)"
+        <li v-for="k in runList.slice(0, 12) " :key="k.number" @click="edit(k)" @drop="drop($event, k)"
           @dragover="allowDrop($event)" @dragenter="dragEnter($event)" @dragleave="dragLeave($event)">
           <div class="number">{{ k.number }}</div>
           <div lang="en" class="name" @dragstart="dragStart($event, k)" draggable="true">{{ k.name }}</div>
@@ -11,35 +11,35 @@
     </div>
     <div id="middle">
       <ul>
-        <li v-for="k in activeKennel.slice(12, 17) " :key="k.number" @click="edit(k)" @drop="drop($event, k)"
+        <li v-for="k in runList.slice(12, 17) " :key="k.number" @click="edit(k)" @drop="drop($event, k)"
           @dragover="allowDrop($event)" @dragenter="dragEnter($event)" @dragleave="dragLeave($event)">
           <div class="number">{{ k.number }}</div>
           <div lang="en" class="name" @dragstart="dragStart($event, k)" draggable="true">{{ k.name }}</div>
         </li>
       </ul>
       <ul>
-        <li v-for="k in activeKennel.slice(17, 22) " :key="k.number" @click="edit(k)" @drop="drop($event, k)"
+        <li v-for="k in runList.slice(17, 22) " :key="k.number" @click="edit(k)" @drop="drop($event, k)"
           @dragover="allowDrop($event)" @dragenter="dragEnter($event)" @dragleave="dragLeave($event)">
           <div class="number">{{ k.number }}</div>
           <div lang="en" class="name" @dragstart="dragStart($event, k)" draggable="true">{{ k.name }}</div>
         </li>
       </ul>
       <ul>
-        <li v-for="k in activeKennel.slice(22, 27) " :key="k.number" @click="edit(k)" @drop="drop($event, k)"
+        <li v-for="k in runList.slice(22, 27) " :key="k.number" @click="edit(k)" @drop="drop($event, k)"
           @dragover="allowDrop($event)" @dragenter="dragEnter($event)" @dragleave="dragLeave($event)">
           <div class="number">{{ k.number }}</div>
           <div lang="en" class="name" @dragstart="dragStart($event, k)" draggable="true">{{ k.name }}</div>
         </li>
       </ul>
       <ul>
-        <li v-for="k in activeKennel.slice(27, 32) " :key="k.number" @click="edit(k)" @drop="drop($event, k)"
+        <li v-for="k in runList.slice(27, 32) " :key="k.number" @click="edit(k)" @drop="drop($event, k)"
           @dragover="allowDrop($event)" @dragenter="dragEnter($event)" @dragleave="dragLeave($event)">
           <div class="number">{{ k.number }}</div>
           <div lang="en" class="name" @dragstart="dragStart($event, k)" draggable="true">{{ k.name }}</div>
         </li>
       </ul>
       <ul>
-        <li v-for="k in activeKennel.slice(32, 37) " :key="k.number" @click="edit(k)" @drop="drop($event, k)"
+        <li v-for="k in runList.slice(32, 37) " :key="k.number" @click="edit(k)" @drop="drop($event, k)"
           @dragover="allowDrop($event)" @dragenter="dragEnter($event)" @dragleave="dragLeave($event)">
           <div class="number">{{ k.number }}</div>
           <div lang="en" class="name" @dragstart="dragStart($event, k)" draggable="true">{{ k.name }}</div>
@@ -48,7 +48,7 @@
     </div>
     <div id="right">
       <ul>
-        <li v-for="k in activeKennel.slice(37, 49) " :key="k.number" @click="edit(k)" @drop="drop($event, k)"
+        <li v-for="k in runList.slice(37, 49) " :key="k.number" @click="edit(k)" @drop="drop($event, k)"
           @dragover="allowDrop($event)" @dragenter="dragEnter($event)" @dragleave="dragLeave($event)">
           <div class="number">{{ k.number }}</div>
           <div lang="en" class="name" @dragstart="dragStart($event, k)" draggable="true">{{ k.name }}</div>
@@ -60,7 +60,7 @@
       <button type="button" @click.prevent="showForm = !showForm" id="close-form">X</button>
       <h2>Edit Kennel {{ kennelToEdit.number }}</h2>
       <div id="name-container">
-        <input ref="nameInput" type="text" placeholder="Name" v-model="newName">
+        <input ref="dogNameInput" type="text" placeholder="Name" v-model="newName">
         <button type="button" @click.prevent="clearRun" id="clear-button">clear</button>
       </div>
 
@@ -69,22 +69,40 @@
 
   </div>
   <aside class="no-print">
-    <div>
+    <header>
+      <h4>Current Kennel:</h4>
+      <h1>{{ activeKennel.name }} </h1>
+    </header>
+    <div id="welcome">
       <h1>Welcome to Kennel Map!</h1>
       <p>Click on a run to edit the name. Drag and drop to move dogs between runs.</p>
       <p>Drag and drops are saved automatically.</p>
     </div>
-    <button id="print-button" onclick="window.print()" >Print</button>
-    <form class="not-implemented">
-      <h3> {{ activeKennelDate === null ? "Today" : activeKennelDate }} </h3>
-      <h2>Save Kennel Configuration</h2>
-      <input type="date" v-model="dateInput">
-      <button id="save-kennel" @click.prevent="saveKennel">Save</button>
+    <button id="print-button" onclick="window.print()">Print</button>
+    <form>
+      <h2>Create New Kennel</h2>
+      <div id="save-kennel-inputs">
+        <label for="kennel-name-input">Name</label>
+        <input id="kennel-name-input" type="text" v-model="kennelNameInput">
+        <label for="date-input">Date (optional)</label>
+        <input id="date-input" type="date" v-model="dateInput">
+      </div>
+      <button id="save-kennel" @click.prevent="newKennel">Create</button>
     </form>
-    <menu id="pick-date" class="not-implemented" >
+    <menu id="pick-date">
       <h2>Saved Kennels</h2>
-      <li @click.prevent="fetchData(kennel.kennel_id)" v-for="kennel in savedKennels" :key="kennel.id"> {{ kennel.date == null ? "Today" : kennel.date }} </li>
+      <li class="current-kennel" @click.prevent="changeKennel(kennel.id)" v-for="kennel in savedKennels"
+        :key="kennel.id">
+        <span>{{ (kennel.id == activeKennel.id ? '> ' : '') + kennel.name }}</span>
+        <button v-if="kennel.id !== 0" @click.prevent="deleteKennel(kennel.id)">Delete</button>
+      </li>
     </menu>
+
+    <div class="loading" v-show="loading">
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+    </div>
 
   </aside>
 </template>
@@ -96,24 +114,31 @@ import dataService from '@/services/dataService'
 const showForm = ref(false)
 const loading = ref(false)
 
-const activeKennel = ref([])
+const runList = ref([])
+const activeKennel = ref({})
 const kennelToEdit = ref({})
 const newName = ref('')
 const activeKennelId = ref(0)
-const activeKennelDate = ref(null)
 
-const nameInput = ref(null)
+const dogNameInput = ref(null)
+
+const kennelNameInput = ref(null)
 const dateInput = ref(null)
 
 const savedKennels = ref([])
 
-const fetchData = async (kennel_id) => {
-  let kennelData = await dataService.getKennel(kennel_id)
-  activeKennelDate.value = (await dataService.getKennelDate(kennel_id))[0].date;
+const fetchData = async () => {
+  let runsData = await dataService.getRuns(activeKennelId.value)
+  activeKennel.value = (await dataService.getKennel(activeKennelId.value))[0];
   savedKennels.value = await dataService.getKennelList();
-  kennelData.sort((a, b) => b.number - a.number);
+  runsData.sort((a, b) => b.number - a.number);
 
-  activeKennel.value = kennelData
+  runList.value = runsData
+}
+
+const changeKennel = async (id) => {
+  activeKennelId.value = id
+  fetchData()
 }
 
 // Individual run management //////////////////////////////////////
@@ -122,8 +147,7 @@ const edit = (k) => {
   showForm.value = true
   kennelToEdit.value = k
   newName.value = k.name
-  nameInput.value.focus()
-  console.log(activeKennel.value)
+  dogNameInput.value.focus()
 }
 
 const saveRun = async () => {
@@ -144,11 +168,74 @@ const clearRun = () => {
 
 // Kennel Managment ////////////////////////////////////////////////
 
-const saveKennel = async () => {
-  activeKennelDate.value = dateInput.value
-  let runs = activeKennel.value
-  let newKennel = { date: activeKennelDate.value }
-  await dataService.saveKennel(runs, newKennel)
+const newKennel = async () => {
+  loading.value = true;
+  // creates a blank list of runs
+  let runs =
+    [
+      { number: 1, name: '' },
+      { number: 2, name: '' },
+      { number: 3, name: '' },
+      { number: 4, name: '' },
+      { number: 5, name: '' },
+      { number: 6, name: '' },
+      { number: 7, name: '' },
+      { number: 8, name: '' },
+      { number: 9, name: '' },
+      { number: 10, name: '' },
+      { number: 11, name: '' },
+      { number: 11.5, name: '' },
+      { number: 12, name: '' },
+      { number: 13, name: '' },
+      { number: 14, name: '' },
+      { number: 15, name: '' },
+      { number: 16, name: '' },
+      { number: 17, name: '' },
+      { number: 18, name: '' },
+      { number: 19, name: '' },
+      { number: 20, name: '' },
+      { number: 21, name: '' },
+      { number: 22, name: '' },
+      { number: 23, name: '' },
+      { number: 24, name: '' },
+      { number: 25, name: '' },
+      { number: 26, name: '' },
+      { number: 27, name: '' },
+      { number: 28, name: '' },
+      { number: 29, name: '' },
+      { number: 30, name: '' },
+      { number: 31, name: '' },
+      { number: 32, name: '' },
+      { number: 33, name: '' },
+      { number: 34, name: '' },
+      { number: 35, name: '' },
+      { number: 36, name: '' },
+      { number: 37, name: '' },
+      { number: 38, name: '' },
+      { number: 39, name: '' },
+      { number: 40, name: '' },
+      { number: 41, name: '' },
+      { number: 42, name: '' },
+      { number: 43, name: '' },
+      { number: 44, name: '' },
+      { number: 45, name: '' },
+      { number: 46, name: '' },
+      { number: 47, name: '' },
+      { number: 48, name: '' },
+    ]
+  let newKennel = { name: kennelNameInput.value, date: dateInput.value }
+  let newKennelId = await dataService.saveKennel(runs, newKennel)
+
+  kennelNameInput.value = null
+  dateInput.value = null
+
+  await changeKennel(newKennelId)
+  loading.value = false
+}
+
+const deleteKennel = async (id) => {
+  await dataService.deleteKennel(id)
+  changeKennel(0)
 }
 
 //////////////////////////////////////////////////////////////////
@@ -174,7 +261,7 @@ const drop = async (event, newK) => {
   let nameData = event.dataTransfer.getData('text/plain')
 
   // this finds the right object with the name we dragged in the kennel array
-  let oldK = activeKennel.value.find(k => k.name === nameData)
+  let oldK = runList.value.find(k => k.name === nameData)
 
   // this makes sure we aren't dragging the same element to the same place,
   // then it swaps the names
@@ -215,6 +302,22 @@ fetchData(activeKennelId.value);
 <style lang="css" scoped>
 @import "https://unpkg.com/open-props";
 
+@keyframes dot-bounce {
+
+  0%,
+  20%,
+  100% {
+    transform: translateY(0);
+    box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.187);
+  }
+
+  50% {
+    transform: translateY(-20px);
+    box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.5);
+  }
+
+}
+
 .not-implemented {
   filter: brightness(0.9);
 }
@@ -243,13 +346,9 @@ fetchData(activeKennelId.value);
   --main-blue: rgb(0, 204, 255);
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 
-  -webkit-touch-callout: none; /* iOS Safari */
-    -webkit-user-select: none; /* Safari */
-     -khtml-user-select: none; /* Konqueror HTML */
-       -moz-user-select: none; /* Old versions of Firefox */
-        -ms-user-select: none; /* Internet Explorer/Edge */
-            user-select: none; /* Non-prefixed version, currently
-                                  supported by Chrome, Edge, Opera and Firefox */
+  /* The following prevents highlighting on all browsers, 
+  to make drag and drop work better */
+  user-select: none;
 }
 
 aside * {
@@ -459,15 +558,37 @@ aside {
   display: flex;
   flex-direction: column;
   position: fixed;
+  flex-wrap: wrap;
   top: 0px;
-  left: 760px;
+  left: 770px;
   padding: 10px;
   z-index: 0;
   background-color: rgb(224, 224, 224);
-  height: 100%;
-  width: 100%;
+  height: 100vh;
+  width: calc(100vw - 770px);
 
-  div {
+  header {
+    background-color: white;
+    width: 200px;
+    margin-left: 10px;
+    padding: 10px;
+    border: 1px solid black;
+    border-radius: 5px;
+
+    h4 {
+      margin: 0px
+    }
+
+    h1 {
+      margin: 0px;
+      font-size: 30px;
+      text-align: center;
+      color: rgb(0, 204, 255);
+      text-shadow: 3px 1px 1px rgb(236, 236, 236);
+    }
+  }
+
+  #welcome {
     display: flex;
     flex-direction: column;
     padding: 10px;
@@ -513,17 +634,25 @@ aside {
 
     h2 {
       text-align: center;
-      margin-top: 0px;
-    }
-    input {
-      height: 30px;
-      padding: 3px;
       margin: 0px;
-      margin-left: 10px;
-      margin-bottom: 10px;
-      border: 1px solid rgb(112, 112, 112);
-      border-radius: 7px;
     }
+
+    #save-kennel-inputs {
+      border: none;
+      margin: 0px;
+
+      input {
+        height: 20px;
+        padding: 3px;
+        margin: 0px;
+        margin-left: 10px;
+        margin-bottom: 10px;
+        border: 1px solid rgb(112, 112, 112);
+        border-radius: 7px;
+        width: 150px;
+      }
+    }
+
 
     #save-kennel {
       width: 100px;
@@ -555,17 +684,46 @@ aside {
       text-align: center;
     }
 
+
+
     li {
-      text-decoration: underline;
-      color: blue;
-      margin-bottom: 5px;
-      cursor: pointer;
+      padding: 5px;
+      display: flex;
+      justify-content: space-between;
+
+      span {
+        text-decoration: underline;
+        color: blue;
+        cursor: pointer;
+      }
+
+      span:hover {
+        filter: brightness(5)
+      }
+
+      button {
+        padding: 3px;
+        margin: 0px;
+        position: relative;
+        left: -10px;
+        border: 1px solid rgb(112, 112, 112);
+        border-radius: 7px;
+        background-color: rgb(210, 240, 255);
+        color: rgb(0, 0, 0);
+        cursor: pointer;
+
+      }
+
+      button:hover {
+        background-color: rgb(238, 94, 94);
+      }
 
     }
 
-    li:hover {
-      filter: brightness(5);
+    li:nth-child(even) {
+      background-color: rgb(224, 224, 224);
     }
+
 
   }
 
@@ -579,6 +737,49 @@ aside {
     margin-left: 75px;
     cursor: pointer;
   }
+
+  .loading {
+    position: fixed;
+    left: calc(385px - 100px);
+    top: calc(50% - 50px);
+    z-index: 1000;  
+    
+    width: 200px;
+    height: 100px;  
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0px 0px 100vw 100vw rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    
+
+    .dot {
+      display: inline-block;
+      height: 10px;
+      width: 10px;
+      background-color: rgb(0, 204, 255);
+      border-radius: 50%;
+      margin: 4px;
+      animation: dot-bounce .8s infinite;
+    }
+
+    .dot:nth-child(1) {
+      animation-delay: -0.4s;
+    }
+
+    .dot:nth-child(2) {
+      animation-delay: -0.2s;
+    }
+
+    .dot:nth-child(3) {
+      animation-delay: 0s;
+    }
+
+
+  }
+
 }
 
 
