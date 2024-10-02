@@ -69,36 +69,42 @@
 
   </div>
   <aside class="no-print">
-    <header>
-      <h4>Current Kennel:</h4>
-      <h1>{{ activeKennel.name }} </h1>
-    </header>
-    <div id="welcome">
-      <h1>Welcome to Kennel Map!</h1>
-      <p>Click on a run to edit the name. Drag and drop to move dogs between runs.</p>
-      <p>Drag and drops are saved automatically.</p>
-    </div>
-    <button id="print-button" onclick="window.print()">Print</button>
-    <form>
-      <h2>Create New Kennel</h2>
-      <div id="save-kennel-inputs">
-        <label for="kennel-name-input">Name</label>
-        <input id="kennel-name-input" type="text" v-model="kennelNameInput">
-        <label for="date-input">Date (optional)</label>
-        <input id="date-input" type="date" v-model="dateInput">
+    <div class="aside-left">
+      <header>
+        <h1>{{ activeKennel.name }} </h1>
+      </header>
+      <div id="welcome">
+        <h1>Welcome to Kennel Map!</h1>
+        <p>Click on a run to edit the name. Drag and drop to move dogs between runs.</p>
+        <p>The name of current kennel being edited is shown above. </p>
+        <p>Use the form below to create a new, blank kennel. The list of created kennels can be selected on the right.
+        </p>
       </div>
-      <button id="save-kennel" @click.prevent="newKennel">Create</button>
-    </form>
-    <menu id="pick-date">
-      <h2>Saved Kennels</h2>
-      <li class="current-kennel" @click.prevent="changeKennel(kennel.id)" v-for="kennel in savedKennels"
-        :key="kennel.id">
-        <span>{{ (kennel.id == activeKennel.id ? '> ' : '') + kennel.name }}</span>
-        <button v-if="kennel.id !== 0" @click.prevent="deleteKennel(kennel.id)">Delete</button>
-      </li>
-    </menu>
+      <button id="print-button" onclick="window.print()">Print</button>
+      <form>
+        <h2>Create New Kennel</h2>
+        <div id="save-kennel-inputs">
+          <label for="kennel-name-input">Name</label>
+          <input id="kennel-name-input" autocomplete="off" type="text" v-model="kennelNameInput">
+          <label for="date-input">Date (optional)</label>
+          <input id="date-input" type="date" v-model="dateInput">
+        </div>
+        <button id="save-kennel" @click.prevent="newKennel">Create</button>
+      </form>
+    </div>
+    <div class="aside-right">
+      <menu id="pick-date">
+        <h2>Saved Kennels</h2>
+        <li class="current-kennel" @click.prevent="changeKennel(kennel.id)" v-for="kennel in savedKennels"
+          :key="kennel.id">
+          <span>{{ (kennel.id == activeKennel.id ? '> ' : '') + kennel.name }}</span>
+          <button v-if="kennel.id !== 0" @click.prevent="deleteKennel(kennel.id)">Delete</button>
+        </li>
+      </menu>
+    </div>
 
     <div class="loading" v-show="loading">
+      Loading Kennel 
       <div class="dot"></div>
       <div class="dot"></div>
       <div class="dot"></div>
@@ -555,125 +561,145 @@ aside * {
 }
 
 aside {
-  display: flex;
-  flex-direction: column;
+  width: calc(100vw - 770px);
+  height: 100vh;
+  z-index: 0;
   position: fixed;
-  flex-wrap: wrap;
   top: 0px;
   left: 770px;
-  padding: 10px;
-  z-index: 0;
   background-color: rgb(224, 224, 224);
-  height: 100vh;
-  width: calc(100vw - 770px);
+  padding: 10px;
+  display: flex;
 
-  header {
-    background-color: white;
-    width: 200px;
-    margin-left: 10px;
-    padding: 10px;
-    border: 1px solid black;
-    border-radius: 5px;
 
-    h4 {
-      margin: 0px
-    }
-
-    h1 {
-      margin: 0px;
-      font-size: 30px;
-      text-align: center;
-      color: rgb(0, 204, 255);
-      text-shadow: 3px 1px 1px rgb(236, 236, 236);
-    }
-  }
-
-  #welcome {
+  .aside-left {
     display: flex;
     flex-direction: column;
-    padding: 10px;
-    margin: 10px;
-    border: 1px solid black;
-    border-radius: 5px;
-    background-color: white;
-    width: 200px;
-    padding: 10px;
+    flex-wrap: wrap;
     align-items: center;
-    z-index: 0;
 
-    h1 {
-      text-align: center;
-    }
-  }
+    width: 290px;
 
-  form {
-    display: flex;
-    flex-direction: column;
-    padding: 10px;
-    margin: 10px;
-    border: 1px solid black;
-    border-radius: 5px;
-    background-color: white;
-    width: 200px;
-    padding: 10px;
-    align-items: center;
-    z-index: 0;
-
-
-    h3 {
-      margin-block: 0px;
-      font-weight: 300;
-      display: inline-block;
+    header {
+      background-color: white;
+      width: 250px;
+      margin-inline: 10px;
+      padding: 10px;
       border: 1px solid black;
-      padding: 5px;
-      position: relative;
-      top: -5px;
-      left: -70px;
-      color: rgb(0, 204, 255);
-    }
+      border-radius: 5px;
 
-    h2 {
-      text-align: center;
-      margin: 0px;
-    }
 
-    #save-kennel-inputs {
-      border: none;
-      margin: 0px;
-
-      input {
-        height: 20px;
-        padding: 3px;
+      h1 {
         margin: 0px;
-        margin-left: 10px;
-        margin-bottom: 10px;
-        border: 1px solid rgb(112, 112, 112);
-        border-radius: 7px;
-        width: 150px;
+        font-size: 30px;
+        text-align: center;
+        color: rgb(0, 204, 255);
+        text-shadow: 3px 1px 1px rgb(236, 236, 236);
       }
     }
 
-
-    #save-kennel {
-      width: 100px;
-      height: 30px;
-      background-color: rgb(0, 204, 255);
-      color: white;
-      border: none;
+    #welcome {
+      display: flex;
+      flex-direction: column;
+      padding: 10px;
+      margin: 10px;
+      border: 1px solid black;
       border-radius: 5px;
+      background-color: white;
+      width: 250px;
+      padding: 10px;
+      align-items: center;
+      z-index: 0;
+
+      h1 {
+        text-align: center;
+        margin-bottom: 0px;
+      }
+
+      p {
+        margin-bottom: 0px
+      }
     }
 
-    #save-kennel:hover {
-      background-color: rgb(146, 228, 255);
-      cursor: pointer;
+    form {
+      display: flex;
+      flex-direction: column;
+      flex-wrap: wrap;
+      padding: 10px;
+      margin: 10px;
+      border: 1px solid black;
+      border-radius: 5px;
+      background-color: white;
+      width: 250px;
+      padding: 10px;
+      align-items: center;
+      z-index: 0;
 
+      margin-bottom: auto;
+
+      h3 {
+        margin-block: 0px;
+        font-weight: 300;
+        display: inline-block;
+        border: 1px solid black;
+        padding: 5px;
+        position: relative;
+        top: -5px;
+        left: -70px;
+        color: rgb(0, 204, 255);
+      }
+
+      h2 {
+        text-align: center;
+        margin: 0px;
+      }
+
+      #save-kennel-inputs {
+        border: none;
+        margin: 0px;
+        display: flex;
+        flex-direction: column;
+
+        label {
+          text-align: center;
+        }
+
+        input {
+          height: 20px;
+          padding: 3px;
+          margin: 0px;
+          margin-left: 10px;
+          margin-bottom: 10px;
+          border: 1px solid rgb(112, 112, 112);
+          border-radius: 7px;
+          width: 150px;
+        }
+      }
+
+
+      #save-kennel {
+        width: 100px;
+        height: 30px;
+        background-color: rgb(0, 204, 255);
+        color: white;
+        border: none;
+        border-radius: 5px;
+      }
+
+      #save-kennel:hover {
+        background-color: rgb(146, 228, 255);
+        cursor: pointer;
+
+      }
     }
+
   }
 
   #pick-date {
     list-style: none;
     padding: 0px;
     margin: 10px;
+    margin-top: 0px;
     border: 1px solid black;
     border-radius: 5px;
     background-color: white;
@@ -734,7 +760,6 @@ aside {
     color: white;
     border: none;
     border-radius: 5px;
-    margin-left: 75px;
     cursor: pointer;
   }
 
@@ -742,10 +767,11 @@ aside {
     position: fixed;
     left: calc(385px - 100px);
     top: calc(50% - 50px);
-    z-index: 1000;  
-    
+    z-index: 1000;
+    font-size: 20px;
+
     width: 200px;
-    height: 100px;  
+    height: 100px;
     background-color: white;
     border-radius: 10px;
     box-shadow: 0px 0px 100vw 100vw rgba(0, 0, 0, 0.5);
@@ -753,7 +779,7 @@ aside {
     justify-content: center;
     align-items: center;
 
-    
+
 
     .dot {
       display: inline-block;
