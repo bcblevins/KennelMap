@@ -110,8 +110,6 @@
       <div class="dot"></div>
     </div>
 
-    <RouterLink to="/demo" > Go to demo </RouterLink> 
-
   </aside>
 </template>
 
